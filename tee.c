@@ -45,6 +45,10 @@ typedef struct {
 		exit(EXIT_FAILURE);                                             \
 	}
 
+#define IS_APPEND_OPT(opt)                                          \
+  strncmp(opt, "-a", strlen("-a") != 0) &&                          \
+  strncmp(opt, "--append", strlen("--append") != 0)                 \
+
 int8_t _open(const char *path, uint32_t flags)
 {
 	int8_t fd = open(path, flags, NEW_FILE_MODE);
@@ -92,7 +96,7 @@ int main(int argc, char **argv)
   /*opening all given files*/
 	for(size_t i = 1, j = 1; i < output_files_n; j++, i++) {
 			memset(output_f[i].name, 0, MAX_FILENAME_LEN);
-			if(strncmp(argv[j], "-a", strlen("-a") != 0)) {
+			if(IS_APPEND_OPT(argv[j])) {
 				strncpy(output_f[i].name, argv[j], strlen(argv[j]));
 				output_f[i].descr = _open(output_f[i].name, (append ? O_APPEND : 0) | O_WRONLY | O_CREAT);
 			}
