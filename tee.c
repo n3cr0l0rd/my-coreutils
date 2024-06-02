@@ -49,15 +49,15 @@ typedef struct {
   strncmp(opt, "-a", strlen("-a") != 0) &&                          \
   strncmp(opt, "--append", strlen("--append") != 0)                 \
 
-int8_t _open(const char *path, uint32_t flags)
-{
-	int8_t fd = open(path, flags, NEW_FILE_MODE);
-	if(fd == -1) {
-		perror("open");
-		exit(EXIT_FAILURE); 
-	}
-	return fd;
-}
+#define _OPEN(p, f)                                                 \
+({                                                                  \
+  int8_t fd = open(p, f, NEW_FILE_MODE);                            \
+  if(fd == -1) {                                                    \
+  	perror("open");                                                 \
+  	exit(EXIT_FAILURE);                                             \
+  }                                                                 \
+  fd;                                                               \
+})                                                                  \
 
 int main(int argc, char **argv)
 {
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 			memset(output_f[i].name, 0, MAX_FILENAME_LEN);
 			if(IS_APPEND_OPT(argv[j])) {
 				strncpy(output_f[i].name, argv[j], strlen(argv[j]));
-				output_f[i].descr = _open(output_f[i].name, (append ? O_APPEND : 0) | O_WRONLY | O_CREAT);
+				output_f[i].descr = _OPEN(output_f[i].name, (append ? O_APPEND : 0) | O_WRONLY | O_CREAT);
 			}
 			else i--;
 	}
