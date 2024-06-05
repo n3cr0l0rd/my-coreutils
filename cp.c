@@ -1,6 +1,8 @@
 #include "./wrapped_io.h"
+#include "./stdlibs.h"
 #include <stdbool.h>
 #include <sys/stat.h>
+#include <string.h>
 
 /*TODO: add -r and -f opts*/
 

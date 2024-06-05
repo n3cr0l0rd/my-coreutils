@@ -1,12 +1,5 @@
 #pragma once
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <fcntl.h>
-
 #define MAX_INPUT_STR_LEN 8192
 #define NEW_FILE_MODE     (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) 
 

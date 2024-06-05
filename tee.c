@@ -1,7 +1,7 @@
-#include <stdlib.h>
+#include "./wrapped_io.h"
+#include "./stdlibs.h"
 #include <stdbool.h>
 #include <getopt.h>
-#include "./wrapped_io.h"
 
 /*TODO: add -i and -p options*/
 
