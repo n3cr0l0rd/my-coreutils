@@ -1,21 +1,15 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <getopt.h>
+#include "./wrapped_io.h"
 
 /*TODO: add -i and -p options*/
 
 #define PROGRAM_NAME      "tee"
 #define MAX_FILENAME_LEN  255
-#define MAX_INPUT_STR_LEN 8192
-#define NEW_FILE_MODE     (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) 
 
 typedef struct {
-	uint8_t descr;
+	uint64_t descr;
 	char name[MAX_FILENAME_LEN];
 } output_file;
 
@@ -26,38 +20,13 @@ typedef struct {
 	puts("-h, --help\tprint this menu and exit");                     \
 	exit(s);                                                      
 
-#define _WRITE(f, b)                                                \
-	if(write(f, b, strlen(b)) == -1) {                                \
-		perror("write");                                                \
-		exit(EXIT_FAILURE);                                             \
-	}
-
-#define _CLOSE(f)                                                   \
-	if(close(f) == -1) {                                              \
-		perror("close");                                                \
-		exit(EXIT_FAILURE);                                             \
-	}                               
-
 #define GET_STDIN_STR(b)                                            \
 	memset(b, 0, MAX_INPUT_STR_LEN);                                  \
-	if((read(STDOUT_FILENO, b, MAX_INPUT_STR_LEN)) == -1) {           \
-		perror("read");                                                 \
-		exit(EXIT_FAILURE);                                             \
-	}
+  _READ(STDIN_FILENO, b)                                            \
 
 #define IS_APPEND_OPT(opt)                                          \
   strncmp(opt, "-a", strlen("-a") != 0) &&                          \
   strncmp(opt, "--append", strlen("--append") != 0)                 \
-
-#define _OPEN(p, f)                                                 \
-({                                                                  \
-  int8_t fd = open(p, f, NEW_FILE_MODE);                            \
-  if(fd == -1) {                                                    \
-  	perror("open");                                                 \
-  	exit(EXIT_FAILURE);                                             \
-  }                                                                 \
-  fd;                                                               \
-})                                                                  \
 
 int main(int argc, char **argv)
 {
@@ -98,7 +67,7 @@ int main(int argc, char **argv)
 			memset(output_f[i].name, 0, MAX_FILENAME_LEN);
 			if(IS_APPEND_OPT(argv[j])) {
 				strncpy(output_f[i].name, argv[j], strlen(argv[j]));
-				output_f[i].descr = _OPEN(output_f[i].name, (append ? O_APPEND : 0) | O_WRONLY | O_CREAT);
+				output_f[i].descr = _OPEN(output_f[i].name, (append ? O_APPEND : 0) | O_WRONLY | O_CREAT, 1);
 			}
 			else i--;
 	}
