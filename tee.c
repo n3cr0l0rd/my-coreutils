@@ -7,6 +7,7 @@
 
 #define PROGRAM_NAME      "tee"
 #define MAX_FILENAME_LEN  255
+#define MAX_INPUT_STR_LEN 8192
 
 typedef struct {
 	uint64_t descr;
@@ -22,7 +23,7 @@ typedef struct {
 
 #define GET_STDIN_STR(b)                                            \
 	memset(b, 0, MAX_INPUT_STR_LEN);                                  \
-  _READ(STDIN_FILENO, b)                                            \
+  _READ(STDIN_FILENO, b, MAX_INPUT_STR_LEN)                         \
 
 #define IS_APPEND_OPT(opt)                                          \
   strncmp(opt, "-a", strlen("-a") != 0) &&                          \

@@ -1,10 +1,9 @@
 #pragma once
 
-#define MAX_INPUT_STR_LEN 8192
 #define NEW_FILE_MODE     (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) 
 
-#define _READ(f, b)                           \
-	if((read(f, b, MAX_INPUT_STR_LEN)) == -1) { \
+#define _READ(f, b, n)                        \
+	if((read(f, b, n)) == -1) {                 \
 		perror("read");                           \
 		exit(EXIT_FAILURE);                       \
   }                                           \
