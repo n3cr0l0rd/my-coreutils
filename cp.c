@@ -6,10 +6,11 @@
 
 /*TODO: add -r and -f opts*/
 
-#define PROGRAM_NAME     "cp"
-#define MAX_DST_FN_LEN   8192
-#define MAX_SRC_LINE_LEN 8192
-#define LAST_ARG         argv[argc - 1]
+#define PROGRAM_NAME      "cp"
+#define MAX_INPUT_STR_LEN 8192
+#define MAX_DST_FN_LEN    8192
+#define MAX_SRC_LINE_LEN  8192
+#define LAST_ARG          argv[argc - 1]
 
 #define _COPY(s_path, d_path)                        \
 ({                                                   \
@@ -19,11 +20,11 @@
   s_file = _OPEN(s_path, O_RDONLY, false);           \
   d_file = _OPEN(d_path, O_CREAT | O_WRONLY, false); \
                                                      \
-  _READ(s_file, s_file_str);                         \
+  _READ(s_file, s_file_str, MAX_INPUT_STR_LEN);      \
   while(*s_file_str) {                               \
     _WRITE(d_file, s_file_str);                      \
     memset(s_file_str, 0, MAX_INPUT_STR_LEN);        \
-    _READ(s_file, s_file_str);                       \
+    _READ(s_file, s_file_str, MAX_INPUT_STR_LEN);    \
   }                                                  \
   close(s_file);                                     \
   close(d_file);                                     \
